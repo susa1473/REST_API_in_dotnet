@@ -1,0 +1,19 @@
+[Route("api/[controller]")]
+[ApiController]
+public class ProgrammingLanguageController : ControllerBase
+{
+    private readonly MySqlConnection _connection;
+
+    public ProgrammingLanguageController(IConfiguration configuration)
+    {
+        _connection = new MySqlConnection(configuration.GetConnectionString("DefaultConnection"));
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<ProgrammingLanguageModel>>> Get()
+    {
+        var sql = "SELECT Id, name, info, released_year, githut_rank, created_at, updated_at FROM programming_languages";
+        var ProgrammingLanguageItems = await _connection.QueryAsync<ProgrammingLanguageModel>(sql);
+        return Ok(ProgrammingLanguageItems);
+    }
+}
